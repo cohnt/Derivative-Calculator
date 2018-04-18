@@ -7,9 +7,10 @@
 #include "math_definitions.h"
 
 class PolishNotationConverter {
+public:
 	PolishNotationConverter() {} //Only constructor needed
 
-	std::vector<Token> ParseString(std::string) {
+	std::vector<Token> ParseString(std::string str) {
 		std::vector<Token> infix;
 		//
 		return infix;
