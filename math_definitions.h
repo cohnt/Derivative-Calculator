@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <iostream>
 #include <cassert>
 
 std::vector<std::string> mathSpecialStrings = {
@@ -90,31 +91,14 @@ std::map<std::string, int> operatorArguments = {
 
 class Token {
 public:
-	Token(double numVal_in) : number(true), numVal(numVal_in), strVal("") {}
-	Token(std::string strVal_in) : number(false), numVal(0), strVal(strVal_in) {}
-
-	void setVal(double numVal_in) {
-		assert(number);
-		numVal = numVal_in;
-	}
-	void setToken(std::string strVal_in) {
-		assert(!number);
-		strVal = strVal_in;
-	}
-	double getVal() const {
-		assert(number);
-		return numVal;
-	}
-	std::string getToken() const {
-		assert(!number);
-		return strVal;
-	}
-
-private:
-	bool number;
-	double numVal;
-	std::string strVal;
+	Token(std::string val_in) : val(val_in) {}
+	std::string val;
 };
+
+std::ostream & operator<<(std::ostream &os, const Token &t) {
+	os << t.val;
+	return os;
+}
 
 
 #endif
