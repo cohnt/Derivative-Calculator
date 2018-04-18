@@ -49,7 +49,17 @@ int main(int argc, char** argv) {
 		std::cout << std::endl;
 	}
 
-	std::string output = converter.OutputString(infix2);
+	simplify(derivative);
+	std::vector<Token> infix3 = converter.PrefixToInfix(derivative);
+	if(debug) {
+		std::cout << "Simplified infix:" << std::endl;
+		for(int i=0; i<int(infix3.size()); ++i) {
+			std::cout << infix3[i] << std::endl;
+		}
+		std::cout << std::endl;
+	}
+
+	std::string output = converter.OutputString(infix3);
 
 	std::cout << "Result:" << std::endl;
 	std::cout << output << std::endl << std::endl;

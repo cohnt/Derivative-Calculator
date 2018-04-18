@@ -47,7 +47,6 @@ std::pair<std::vector<Token>, std::vector<Token>> getArguments(std::vector<Token
 	args.second = std::vector<Token>(prefix.begin()+start, prefix.begin()+i);
 	return args;
 }
-
 void append(std::vector<Token> & target, std::vector<Token> & toAdd) {
 	target.insert(target.end(), toAdd.begin(), toAdd.end());
 	return;
@@ -272,6 +271,47 @@ std::vector<Token> differentiate(std::vector<Token> function) {
 
 	//
 	return derivative;
+}
+
+bool timesOne(std::vector<Token> & function) {
+	for(int i=0; i<int(function.size()); ++i) {
+		if(function[i] == "*") {
+			std::vector<Token> section(function.begin()+i, function.end());
+			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
+			std::cout << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			if(args.first[0] == "1") {
+				function.erase(function.begin()+i, function.begin()+i+2);
+				return true;
+			}
+			else if(args.second[0] == "1") {
+				std::cout << "Times 1 in arg 2!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					std::cout << function[i] << " ";
+				}
+				std::cout << std::endl;
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
+				std::cout << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					std::cout << function[i] << " ";
+				}
+				std::cout << std::endl;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void simplify(std::vector<Token> & function) {
+	bool madeAChange = true;
+	while(madeAChange) {
+		madeAChange = false;
+
+		if(!madeAChange) {
+			madeAChange = madeAChange || timesOne(function);
+		}
+	}
 }
 
 #endif
