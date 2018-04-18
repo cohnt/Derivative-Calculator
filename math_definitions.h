@@ -7,7 +7,11 @@
 #include <iostream>
 #include <cassert>
 
-std::vector<std::string> mathSpecialStrings = {
+const std::vector<std::string> constants = {
+	"E",
+	"T"
+};
+const std::vector<std::string> mathSpecialStrings = {
 	"(",
 	")",
 	"+",
@@ -31,7 +35,7 @@ std::vector<std::string> mathSpecialStrings = {
 	"E",
 	"T"
 };
-std::map<std::string, int> operatorPrecedence = {
+const std::map<std::string, int> operatorPrecedence = {
 	{"+", 2},
 	{"-", 2},
 	{"*", 3},
@@ -50,7 +54,7 @@ std::map<std::string, int> operatorPrecedence = {
 	{"log", 4},
 	{"ln", 4}
 };
-std::map<std::string, bool> associatesLeft = {
+const std::map<std::string, bool> associatesLeft = {
 	{"+", true},
 	{"-", true},
 	{"*", true},
@@ -69,7 +73,7 @@ std::map<std::string, bool> associatesLeft = {
 	{"log", false},
 	{"ln", false}
 };
-std::map<std::string, int> operatorArguments = {
+const std::map<std::string, int> operatorArguments = {
 	{"+", 2},
 	{"-", 2},
 	{"*", 2},
