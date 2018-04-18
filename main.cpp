@@ -3,6 +3,7 @@
 
 #include "math_definitions.h"
 #include "polish_notation_converter.h"
+#include "derivative.h"
 
 bool debug = true;
 
