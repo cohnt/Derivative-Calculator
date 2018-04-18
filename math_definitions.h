@@ -126,16 +126,6 @@ const std::map<std::string, int> operatorArguments = {
 	{"ln", 1}
 };
 
-class Token {
-public:
-	Token(std::string val_in) : val(val_in) {}
-	std::string val;
-};
-
-std::ostream & operator<<(std::ostream &os, const Token &t) {
-	os << t.val;
-	return os;
-}
-
+typedef std::string Token;
 
 #endif
