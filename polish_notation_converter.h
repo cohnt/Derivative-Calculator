@@ -200,12 +200,14 @@ public:
 			}
 			else if(operatorArguments.find(op)->second == 2) {
 				std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(prefix);
+				std::vector<Token> infix1 = PrefixToInfix(args.first);
+				std::vector<Token> infix2 = PrefixToInfix(args.second);
 				infix.push_back("(");
-				infix.insert(infix.end(), args.first.begin(), args.first.end());
+				infix.insert(infix.end(), infix1.begin(), infix1.end());
 				infix.push_back(")");
 				infix.push_back(prefix[0]);
 				infix.push_back("(");
-				infix.insert(infix.end(), args.second.begin(), args.second.end());
+				infix.insert(infix.end(), infix2.begin(), infix2.end());
 				infix.push_back(")");
 				return infix;
 			}
