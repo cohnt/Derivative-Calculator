@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <stack>
 
 #include "math_definitions.h"
 
@@ -107,8 +109,69 @@ public:
 		return infix;
 	}
 	std::vector<Token> InfixToPrefix(std::vector<Token> infix) {
+		//The shunting yard algorithm
 		std::vector<Token> prefix;
-		//
+		std::stack<Token> operatorStack;
+		Token stackLast;
+		std::string unusedString;
+
+		std::reverse(infix.begin(), infix.end());
+		for(int i=0; i<int(infix.size()); ++i) {
+			if(checkIfConstant(infix[i], unusedString) ||
+			   checkIfNegative(infix[i]) ||
+			   isdigit(infix[i][0])) {
+				//If it's a number
+				prefix.push_back(infix[i]);
+			}
+			else if(infix[i] == ")") { //So it was originally (
+				operatorStack.push(infix[i]);
+			}
+			else if(infix[i] == "(") { //So it was originally )
+				stackLast = operatorStack.top();
+				while(stackLast != ")") { //So it was originally (
+					prefix.push_back(stackLast);
+					operatorStack.pop();
+					if(operatorStack.size() > 0) {
+						stackLast = operatorStack.top();
+						operatorStack.pop();
+					}
+					else {
+						assert(false); //Mismatched parentheses!
+					}
+				}
+			}
+			else if(checkIfOperator(infix[i], unusedString)) {
+				if(int(operatorStack.size()) == 0 || operatorStack.top() == ")") {
+					//So it was originally (
+					operatorStack.push(infix[i]);
+				}
+				else if(operatorPrecedence.find(infix[i])->second > operatorPrecedence.find(operatorStack.top())->second) {
+					operatorStack.push(infix[i]);
+				}
+				else if(operatorPrecedence.find(infix[i])->second == operatorPrecedence.find(operatorStack.top())->second &&
+					!(associatesLeft.find(infix[i])->second)) {
+					operatorStack.push(infix[i]);
+				}
+				else {
+					prefix.push_back(operatorStack.top());
+					operatorStack.pop();
+					operatorStack.push(infix[i]);
+				}
+			}
+		}
+
+		while(int(operatorStack.size()) > 0) {
+			prefix.push_back(operatorStack.top());
+			operatorStack.pop();
+		}
+		for(int i=0; i<int(prefix.size()); ++i) {
+			if(prefix[i] == ")") { //So it was originally (
+				assert(false); //Mismatched parentheses!
+			}
+		}
+
+		std::reverse(prefix.begin(), prefix.end());
+
 		return prefix;
 	}
 	std::vector<Token> PrefixToInfix(std::vector<Token> prefix) {
