@@ -4,6 +4,7 @@
 #include "math_definitions.h"
 #include "polish_notation_converter.h"
 #include "derivative.h"
+#include "simplify.h"
 
 bool debug = true;
 
