@@ -42,7 +42,7 @@ const std::vector<std::string> mathOperators = {
 };
 const std::vector<std::string> mathConstants = {
 	"E",
-	"T"
+	"PI"
 };
 const std::vector<std::string> mathSpecialStrings = {
 	"(",
