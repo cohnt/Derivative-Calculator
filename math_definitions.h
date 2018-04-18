@@ -87,5 +87,9 @@ std::map<std::string, int> operatorArguments = {
 	{"ln", 1}
 };
 
+class Token {
+	//
+};
+
 
 #endif

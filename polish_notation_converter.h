@@ -8,6 +8,32 @@
 
 class PolishNotationConverter {
 	PolishNotationConverter() {} //Only constructor needed
+
+	std::vector<Token> ParseString(std::string) {
+		std::vector<Token> infix;
+		//
+		return infix;
+	}
+	std::vector<Token> InfixToPrefix(std::vector<Token> infix) {
+		std::vector<Token> prefix;
+		//
+		return prefix;
+	}
+	std::vector<Token> PrefixToInfix(std::vector<Token> prefix) {
+		std::vector<Token> infix;
+		//
+		return infix;
+	}
+	std::string OutputString(std::vector<Token> infix) {
+		std::string output;
+		//
+		return output;
+	}
+	std::string OutputTex(std::vector<Token> infix) {
+		std::string output;
+		//
+		return output;
+	}
 };
 
 #endif
