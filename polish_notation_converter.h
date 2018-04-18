@@ -214,7 +214,9 @@ public:
 	}
 	std::string OutputString(std::vector<Token> infix) {
 		std::string output;
-		//
+		for(auto iter = infix.begin(); iter != infix.end(); ++iter) {
+			output += *iter;
+		}
 		return output;
 	}
 	std::string OutputTex(std::vector<Token> infix) {
@@ -329,9 +331,7 @@ private:
 			if(checkIfOperator(prefix[i], dummyString)) {
 				numNeeded += operatorArguments.find(prefix[i])->second;
 			}
-			else {
-				--numNeeded;
-			}
+			--numNeeded;
 			++i;
 		}
 		args.first = std::vector<Token>(prefix.begin()+1, prefix.begin()+i);
@@ -341,9 +341,7 @@ private:
 			if(checkIfOperator(prefix[i], dummyString)) {
 				numNeeded += operatorArguments.find(prefix[i])->second;
 			}
-			else {
-				--numNeeded;
-			}
+			--numNeeded;
 			++i;
 		}
 		args.second = std::vector<Token>(prefix.begin()+start, prefix.begin()+i);
