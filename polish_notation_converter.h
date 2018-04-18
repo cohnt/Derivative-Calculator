@@ -176,7 +176,34 @@ public:
 	}
 	std::vector<Token> PrefixToInfix(std::vector<Token> prefix) {
 		std::vector<Token> infix;
-		//
+		std::string dummyString;
+		if(checkIfOperand(prefix[0])) {
+			infix.push_back(prefix[0]);
+			return infix;
+		}
+		else {
+			std::string op = prefix[0];
+			if(operatorArguments.find(op)->second == 1) {
+				infix.push_back(prefix[0]);
+				infix.push_back("(");
+				std::vector<Token> prefix_(prefix.begin()+1, prefix.end());
+				std::vector<Token> infix_ = PrefixToInfix(prefix_);
+				infix.insert(infix.end(), infix_.begin(), infix_.end());
+				infix.push_back(")");
+				return infix;
+			}
+			else if(operatorArguments.find(op)->second == 2) {
+				std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(prefix);
+				infix.push_back("(");
+				infix.insert(infix.end(), args.first.begin(), args.first.end());
+				infix.push_back(")");
+				infix.push_back(prefix[0]);
+				infix.push_back("(");
+				infix.insert(infix.end(), args.second.begin(), args.second.end());
+				infix.push_back(")");
+				return infix;
+			}
+		}
 		return infix;
 	}
 	std::string OutputString(std::vector<Token> infix) {
@@ -275,6 +302,46 @@ private:
 	bool checkIfVariable(const std::string &str) {
 		//Only doing this to keep it uniform
 		return strBeginMatch(str, varName);
+	}
+	//Check if str starts with an operand
+	bool checkIfOperand(const std::string &str) {
+		std::string dummyString;
+		return checkIfNegative(str) ||
+		       isdigit(str[0]) ||
+		       checkIfConstant(str, dummyString) ||
+		       checkIfVariable(str);
+	}
+	//Get the two arguments of a prefix array as prefix arrays
+	std::pair<std::vector<Token>, std::vector<Token>> getArguments(std::vector<Token> prefix) {
+		assert(operatorArguments.find(prefix[0])->second == 2);
+
+		std::pair<std::vector<Token>, std::vector<Token>> args;
+		std::string dummyString;
+		int numNeeded = 1;
+		int i=1;
+		while(numNeeded != 0) {
+			if(checkIfOperator(prefix[i], dummyString)) {
+				numNeeded += operatorArguments.find(prefix[i])->second;
+			}
+			else {
+				--numNeeded;
+			}
+			++i;
+		}
+		args.first = std::vector<Token>(prefix.begin()+1, prefix.begin()+i);
+		int start = i;
+		numNeeded = 1;
+		while(numNeeded != 0) {
+			if(checkIfOperator(prefix[i], dummyString)) {
+				numNeeded += operatorArguments.find(prefix[i])->second;
+			}
+			else {
+				--numNeeded;
+			}
+			++i;
+		}
+		args.second = std::vector<Token>(prefix.begin()+start, prefix.begin()+i);
+		return args;
 	}
 };
 

@@ -31,6 +31,13 @@ int main(int argc, char** argv) {
 	}
 
 	std::vector<Token> infix2 = converter.PrefixToInfix(prefix);
+	if(debug) {
+		std::cout << "Infix:" << std::endl;
+		for(int i=0; i<int(infix2.size()); ++i) {
+			std::cout << infix2[i] << std::endl;
+		}
+		std::cout << std::endl;
+	}
 
 	std::string output = converter.OutputString(infix2);
 
