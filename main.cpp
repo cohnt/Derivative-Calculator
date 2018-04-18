@@ -31,7 +31,16 @@ int main(int argc, char** argv) {
 		std::cout << std::endl;
 	}
 
-	std::vector<Token> infix2 = converter.PrefixToInfix(prefix);
+	std::vector<Token> derivative = differentiate(prefix);
+	if(debug) {
+		std::cout << "Derivative:" << std::endl;
+		for(int i=0; i<int(derivative.size()); ++i) {
+			std::cout << derivative[i] << std::endl;
+		}
+		std::cout << std::endl;
+	}
+
+	std::vector<Token> infix2 = converter.PrefixToInfix(derivative);
 	if(debug) {
 		std::cout << "Infix:" << std::endl;
 		for(int i=0; i<int(infix2.size()); ++i) {

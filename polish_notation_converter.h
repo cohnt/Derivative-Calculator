@@ -223,6 +223,34 @@ public:
 		//
 		return output;
 	}
+	//Get the two arguments of a prefix array as prefix arrays
+	std::pair<std::vector<Token>, std::vector<Token>> getArguments(std::vector<Token> prefix) {
+		assert(operatorArguments.find(prefix[0])->second == 2);
+
+		std::pair<std::vector<Token>, std::vector<Token>> args;
+		std::string dummyString;
+		int numNeeded = 1;
+		int i=1;
+		while(numNeeded != 0) {
+			if(checkIfOperator(prefix[i], dummyString)) {
+				numNeeded += operatorArguments.find(prefix[i])->second;
+			}
+			--numNeeded;
+			++i;
+		}
+		args.first = std::vector<Token>(prefix.begin()+1, prefix.begin()+i);
+		int start = i;
+		numNeeded = 1;
+		while(numNeeded != 0) {
+			if(checkIfOperator(prefix[i], dummyString)) {
+				numNeeded += operatorArguments.find(prefix[i])->second;
+			}
+			--numNeeded;
+			++i;
+		}
+		args.second = std::vector<Token>(prefix.begin()+start, prefix.begin()+i);
+		return args;
+	}
 
 private:
 	//Checks if the string token is contained starting from the first
@@ -317,34 +345,6 @@ private:
 		       isdigit(str[0]) ||
 		       checkIfConstant(str, dummyString) ||
 		       checkIfVariable(str);
-	}
-	//Get the two arguments of a prefix array as prefix arrays
-	std::pair<std::vector<Token>, std::vector<Token>> getArguments(std::vector<Token> prefix) {
-		assert(operatorArguments.find(prefix[0])->second == 2);
-
-		std::pair<std::vector<Token>, std::vector<Token>> args;
-		std::string dummyString;
-		int numNeeded = 1;
-		int i=1;
-		while(numNeeded != 0) {
-			if(checkIfOperator(prefix[i], dummyString)) {
-				numNeeded += operatorArguments.find(prefix[i])->second;
-			}
-			--numNeeded;
-			++i;
-		}
-		args.first = std::vector<Token>(prefix.begin()+1, prefix.begin()+i);
-		int start = i;
-		numNeeded = 1;
-		while(numNeeded != 0) {
-			if(checkIfOperator(prefix[i], dummyString)) {
-				numNeeded += operatorArguments.find(prefix[i])->second;
-			}
-			--numNeeded;
-			++i;
-		}
-		args.second = std::vector<Token>(prefix.begin()+start, prefix.begin()+i);
-		return args;
 	}
 };
 
