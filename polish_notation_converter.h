@@ -123,7 +123,8 @@ public:
 		for(int i=0; i<int(infix.size()); ++i) {
 			if(checkIfConstant(infix[i], unusedString) ||
 			   checkIfNegative(infix[i]) ||
-			   isdigit(infix[i][0])) {
+			   isdigit(infix[i][0]) ||
+			   infix[i] == varName) {
 				//If it's a number
 				prefix.push_back(infix[i]);
 			}
@@ -246,8 +247,12 @@ private:
 	//Check if str starts with a negative number
 	bool checkIfNegative(const std::string &str) {
 		if(str[0] == '-') {
-			assert(int(str.size()) >= 2); //Training minus sign?
-			return isdigit(str[1]);
+			if(int(str.size()) >= 2) {
+				return isdigit(str[1]); //Note: this will always be true
+			}
+			else {
+				return false;
+			}
 		}
 		else {
 			return false;

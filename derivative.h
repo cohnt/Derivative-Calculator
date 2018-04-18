@@ -121,11 +121,6 @@ std::vector<Token> differentiate(std::vector<Token> function) {
 			derivative.push_back("2");
 		}
 		else if(op == "^") {
-			std::cout << "OP: ^ u[0]=" << u[0] << " v[0]=" << v[0] << std::endl;
-			std::cout << "Is u[0] a number? " << isNumber(u[0]) << std::endl;
-			std::cout << "Is u[0] a constant? " << isConstant(u[0]) << std::endl;
-			std::cout << "Is v[0] a number? " << isNumber(v[0]) << std::endl;
-			std::cout << "Is v[0] a constant? " << isConstant(v[0]) << std::endl;
 			if(isNumber(u[0]) || isConstant(u[0])) {
 				derivative.push_back("*");
 				derivative.push_back("*");
