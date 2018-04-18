@@ -116,6 +116,10 @@ public:
 		std::string unusedString;
 
 		std::reverse(infix.begin(), infix.end());
+		// std::cout << "REVERSED" << std::endl;
+		// for(int i=0; i<int(infix.size()); ++i) {
+		// 	std::cout << infix[i] << std::endl;
+		// }
 		for(int i=0; i<int(infix.size()); ++i) {
 			if(checkIfConstant(infix[i], unusedString) ||
 			   checkIfNegative(infix[i]) ||
@@ -127,7 +131,9 @@ public:
 				operatorStack.push(infix[i]);
 			}
 			else if(infix[i] == "(") { //So it was originally )
+				assert(operatorStack.size() > 0);
 				stackLast = operatorStack.top();
+				operatorStack.pop();
 				while(stackLast != ")") { //So it was originally (
 					prefix.push_back(stackLast);
 					operatorStack.pop();
