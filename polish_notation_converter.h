@@ -13,7 +13,7 @@ public:
 	std::vector<Token> ParseString(std::string str) {
 		std::vector<Token> infix;
 
-		bool lastCharOperator = true;
+		bool lastCharOperator = true; //Used to determine whether - means subtraction or negative
 
 		while(int(str.length()) > 0) {
 			//Clear out whitespace at the beginning of str
@@ -38,17 +38,12 @@ public:
 
 			//Check if it's a constant
 			bool isConstant = false;
+			std::string whichConstant = "";
 			if(!found) {
 				for(int i=0; i<int(mathConstants.size()); ++i) {
-					bool match = true;
-					for(int j=0; j<int(mathConstants[i].size()); ++j) {
-						if(mathConstants[i][j] != str[j]) {
-							match = false;
-							break;
-						}
-					}
-					if(match) {
+					if(strBeginMatch(str, mathConstants[i])) {
 						isConstant = true;
+						whichConstant = mathConstants[i];
 						break;
 					}
 				}
@@ -58,10 +53,12 @@ public:
 			//Check if it's a parentheses
 			bool isBracket = false;
 			bool isLeftBracket = false;
+			std::string whichBracket = "";
 			if(!found) {
 				for(int i=0; i<int(mathBrackets.size()); ++i) {
 					if(strBeginMatch(str, mathBrackets[i])) {
 						isBracket = true;
+						whichBracket = mathBrackets[i];
 						break;
 					}
 				}
@@ -78,10 +75,12 @@ public:
 
 			//Check if it's an operator
 			bool isOperator = false;
+			std::string whichOperator = "";
 			if(!found) {
 				for(int i=0; i<int(mathOperators.size()); ++i) {
 					if(strBeginMatch(str, mathOperators[i])) {
 						isOperator = true;
+						whichOperator = mathOperators[i];
 						break;
 					}
 				}
@@ -97,27 +96,42 @@ public:
 
 			assert(found);
 
+			lastCharOperator = !isNumber;
+
 			//Now, we have the following booleans to help us determine what to do:
 			//isNegative, isNumber, isConstant, isBracket, isVar, isOperator
 			if(isNumber) {
-				//
+				std::string number = "";
+				if(isNegative) {
+					number += "-";
+					str.erase(str.begin());
+				}
+				while(str.length() > 0 && isdigit(str[0])) {
+					number += str[0];
+					str.erase(str.begin());
+				}
+				infix.push_back(number);
 			}
 			else if(isConstant) {
-				//
+				str.erase(str.begin(), str.begin()+int(whichConstant.size()));
+				infix.push_back(whichConstant);
 			}
 			else if(isBracket) {
+				str.erase(str.begin(), str.begin()+int(whichBracket.size()));
 				if(isLeftBracket) {
-					//
+					infix.push_back("(");
 				}
 				else {
-					//
+					infix.push_back(")");
 				}
 			}
 			else if(isVar) {
-				//
+				str.erase(str.begin());
+				infix.push_back(varName);
 			}
 			else if(isOperator) {
-				//
+				str.erase(str.begin(), str.begin()+int(whichOperator.size()));
+				infix.push_back(whichOperator);
 			}
 		}
 		return infix;
