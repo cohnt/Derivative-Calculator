@@ -13,26 +13,18 @@ public:
 	std::vector<Token> ParseString(std::string str) {
 		std::vector<Token> infix;
 
-		bool lastCharOperator = true; //Used to determine whether - means subtraction or negative
+		bool lastCharNumber = false; //Used to determine whether - means subtraction or negative
 
 		while(int(str.length()) > 0) {
-			//Clear out whitespace at the beginning of str
-			while(int(str.length())>0 && str[0] == ' ') {
-				str.erase(str.begin());
-			}
-			if(int(str.length()) == 0) {
-				//Then there was trailing whitespace, and we're now done.
+			//Clear out whitespace at the beginning of str, stop if the string is now empty
+			if(clearLeadingWhitespace(str)) {
 				break;
 			}
 
 			bool found = false;
 
 			//Check if we're reading in a negative number/number
-			bool isNegative = false;
-			if(lastCharOperator && str[0] == '-') {
-				assert(int(str.size()) >= 2); //Training minus sign?
-				isNegative = isdigit(str[1]);
-			}
+			bool isNegative = !lastCharNumber && checkIfNegative(str);
 			bool isNumber = isNegative || isdigit(str[0]);
 			found = found || isNumber;
 
@@ -40,13 +32,7 @@ public:
 			bool isConstant = false;
 			std::string whichConstant = "";
 			if(!found) {
-				for(int i=0; i<int(mathConstants.size()); ++i) {
-					if(strBeginMatch(str, mathConstants[i])) {
-						isConstant = true;
-						whichConstant = mathConstants[i];
-						break;
-					}
-				}
+				isConstant = checkIfConstant(str, whichConstant);
 			}
 			found = found || isConstant;
 
@@ -55,21 +41,7 @@ public:
 			bool isLeftBracket = false;
 			std::string whichBracket = "";
 			if(!found) {
-				for(int i=0; i<int(mathBrackets.size()); ++i) {
-					if(strBeginMatch(str, mathBrackets[i])) {
-						isBracket = true;
-						whichBracket = mathBrackets[i];
-						break;
-					}
-				}
-				if(isBracket) {
-					for(int i=0; i<int(mathLeftBrackets.size()); ++i) {
-						if(strBeginMatch(str, mathLeftBrackets[i])) {
-							isLeftBracket = true;
-							break;
-						}
-					}
-				}
+				isBracket = checkIfBracket(str, whichBracket, isLeftBracket);
 			}
 			found = found || isBracket;
 
@@ -77,26 +49,20 @@ public:
 			bool isOperator = false;
 			std::string whichOperator = "";
 			if(!found) {
-				for(int i=0; i<int(mathOperators.size()); ++i) {
-					if(strBeginMatch(str, mathOperators[i])) {
-						isOperator = true;
-						whichOperator = mathOperators[i];
-						break;
-					}
-				}
+				isOperator = checkIfOperator(str, whichOperator);
 			}
 			found = found || isOperator;
 
 			//Check if it's the parameter
 			bool isVar = false;
 			if(!found) {
-				isVar = strBeginMatch(str, varName);
+				isVar = checkIfVariable(str);
 			}
 			found = found || isVar;
 
-			assert(found);
+			assert(found); //Better find it!
 
-			lastCharOperator = !isNumber;
+			lastCharNumber = isNumber;
 
 			//Now, we have the following booleans to help us determine what to do:
 			//isNegative, isNumber, isConstant, isBracket, isVar, isOperator
@@ -134,6 +100,7 @@ public:
 				infix.push_back(whichOperator);
 			}
 		}
+
 		return infix;
 	}
 	std::vector<Token> InfixToPrefix(std::vector<Token> infix) {
@@ -158,7 +125,9 @@ public:
 	}
 
 private:
-	bool strBeginMatch(std::string str, std::string token) {
+	//Checks if the string token is contained starting from the first
+	//character of str
+	bool strBeginMatch(const std::string & str, const std::string & token) {
 		if(token.size() > str.size()) {
 			return false;
 		}
@@ -170,6 +139,76 @@ private:
 			}
 		}
 		return match;
+	}
+	//Clears any leading whitespace in str, and returns whether or not
+	//str is now empty
+	bool clearLeadingWhitespace(std::string &str) {
+		while(int(str.length())>0 && str[0] == ' ') {
+			str.erase(str.begin());
+		}
+		return int(str.length()) == 0;
+	}
+	//Check if str starts with a negative number
+	bool checkIfNegative(const std::string &str) {
+		if(str[0] == '-') {
+			assert(int(str.size()) >= 2); //Training minus sign?
+			return isdigit(str[1]);
+		}
+		else {
+			return false;
+		}
+	}
+	//Check if str starts with a constant name, and if so, stores that constant
+	//into whichConstant
+	bool checkIfConstant(const std::string &str, std::string &whichConstant) {
+		bool isConstant = false;
+		for(int i=0; i<int(mathConstants.size()); ++i) {
+			if(strBeginMatch(str, mathConstants[i])) {
+				isConstant = true;
+				whichConstant = mathConstants[i];
+				break;
+			}
+		}
+		return isConstant;
+	}
+	//Check if str starts with a bracket, and if so, stores that bracket
+	//into whichBracket
+	bool checkIfBracket(const std::string &str, std::string &whichBracket, bool &isLeftBracket) {
+		bool isBracket = false;
+		for(int i=0; i<int(mathBrackets.size()); ++i) {
+			if(strBeginMatch(str, mathBrackets[i])) {
+				isBracket = true;
+				whichBracket = mathBrackets[i];
+				break;
+			}
+		}
+		if(isBracket) {
+			for(int i=0; i<int(mathLeftBrackets.size()); ++i) {
+				if(strBeginMatch(str, mathLeftBrackets[i])) {
+					isLeftBracket = true;
+					break;
+				}
+			}
+		}
+		return isBracket;
+	}
+	//Check if str starts with an operator, and if so, stores that operator
+	//into whichOperator
+	bool checkIfOperator(const std::string &str, std::string &whichOperator) {
+		bool isOperator = false;
+		for(int i=0; i<int(mathOperators.size()); ++i) {
+			if(strBeginMatch(str, mathOperators[i])) {
+				isOperator = true;
+				whichOperator = mathOperators[i];
+				break;
+			}
+		}
+		return isOperator;
+	}
+	//Check if str starts with the variable
+	bool checkIfVariable(const std::string &str) {
+		//Only doing this to keep it uniform
+		return strBeginMatch(str, varName);
 	}
 };
 
