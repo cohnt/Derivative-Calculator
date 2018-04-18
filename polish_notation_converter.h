@@ -60,6 +60,9 @@ public:
 			}
 			found = found || isVar;
 
+			if(!found) {
+				std::cout << "Invalid input" << std::endl;
+			}
 			assert(found); //Better find it!
 
 			lastCharNumber = isNumber;
