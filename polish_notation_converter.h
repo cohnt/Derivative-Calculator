@@ -136,13 +136,10 @@ public:
 				operatorStack.pop();
 				while(stackLast != ")") { //So it was originally (
 					prefix.push_back(stackLast);
-					operatorStack.pop();
-					if(operatorStack.size() > 0) {
+					if(stackLast != ")") {
+						assert(operatorStack.size() > 0);
 						stackLast = operatorStack.top();
 						operatorStack.pop();
-					}
-					else {
-						assert(false); //Mismatched parentheses!
 					}
 				}
 			}
