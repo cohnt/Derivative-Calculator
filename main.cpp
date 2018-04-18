@@ -51,12 +51,8 @@ int main(int argc, char** argv) {
 
 	std::string output = converter.OutputString(infix2);
 
-	std::string outputTex = converter.OutputTex(infix2);
-
-	if(debug) {
-		std::cout << output << std::endl << std::endl;
-		std::cout << outputTex << std::endl << std::endl;
-	}
+	std::cout << "Result:" << std::endl;
+	std::cout << output << std::endl << std::endl;
 
 	return 0;
 }
