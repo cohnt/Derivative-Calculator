@@ -7,7 +7,40 @@
 #include <iostream>
 #include <cassert>
 
-const std::vector<std::string> constants = {
+const std::string varName = "T";
+const std::vector<std::string> mathLeftBrackets = {
+	"(",
+	"[",
+	"{"
+};
+const std::vector<std::string> mathBrackets = {
+	"(",
+	")",
+	"[",
+	"]",
+	"{",
+	"}"
+};
+const std::vector<std::string> mathOperators = {
+	"+",
+	"-",
+	"*",
+	"/",
+	"^",
+	"arcsin",
+	"arccos",
+	"arctan",
+	"cos",
+	"sin",
+	"tan",
+	"cot",
+	"sec",
+	"csc",
+	"sqrt",
+	"log",
+	"ln"
+};
+const std::vector<std::string> mathConstants = {
 	"E",
 	"T"
 };
@@ -33,7 +66,7 @@ const std::vector<std::string> mathSpecialStrings = {
 	"ln",
 	"PI",
 	"E",
-	"T"
+	varName
 };
 const std::map<std::string, int> operatorPrecedence = {
 	{"+", 2},
