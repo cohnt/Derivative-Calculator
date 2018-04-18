@@ -11,8 +11,10 @@ int main(int argc, char** argv) {
 	std::string input;
 	std::cout << "Equation to differentiate: ";
 	std::cin >> input;
+	std::cout << std::endl;
 	std::vector<Token> infix = converter.ParseString(input);
 	if(debug) {
+		std::cout << "Tokenized:" << std::endl;
 		for(int i=0; i<int(infix.size()); ++i) {
 			std::cout << infix[i] << std::endl;
 		}
