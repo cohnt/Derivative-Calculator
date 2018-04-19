@@ -42,6 +42,66 @@ bool timesOne(std::vector<Token> & function, std::ostream & os) {
 	}
 	return false;
 }
+bool expOne(std::vector<Token> & function, std::ostream & os) {
+	for(int i=0; i<int(function.size()); ++i) {
+		if(function[i] == "^") {
+			std::vector<Token> section(function.begin()+i, function.end());
+			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
+			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			if(args.first[0] == "1") {
+				os << "Exp 1 in arg 1!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				return true;
+			}
+			else if(args.second[0] == "1") {
+				os << "Exp 1 in arg 2!" << std::endl;
+				function.erase(function.begin()+i, function.begin()+i+2);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool addZero(std::vector<Token> & function, std::ostream & os) {
+	for(int i=0; i<int(function.size()); ++i) {
+		if(function[i] == "+") {
+			std::vector<Token> section(function.begin()+i, function.end());
+			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
+			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			if(args.first[0] == "0") {
+				os << "Add 0 in arg 1!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				return true;
+			}
+			else if(args.second[0] == "0") {
+				os << "Add 0 in arg 2!" << std::endl;
+				function.erase(function.begin()+i, function.begin()+i+2);
+				return true;
+			}
+		}
+	}
+	return false;
+}
 bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "+" || function[i] == "-") {
@@ -78,42 +138,13 @@ bool trimTrailingZeros(std::vector<Token> & function, std::ostream & os) {
 	}
 	return false;
 }
-bool expOne(std::vector<Token> & function, std::ostream & os) {
-	for(int i=0; i<int(function.size()); ++i) {
-		if(function[i] == "^") {
-			std::vector<Token> section(function.begin()+i, function.end());
-			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
-			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
-			if(args.first[0] == "1") {
-				os << "Exp 1 in arg 1!" << std::endl;
-				for(int i=0; i<int(function.size()); ++i) {
-					os << function[i] << " ";
-				}
-				os << std::endl;
-				function.erase(function.begin()+i+1+int(args.first.size()));
-				function.erase(function.begin()+i);
-				os << "Now it's" << std::endl;
-				for(int i=0; i<int(function.size()); ++i) {
-					os << function[i] << " ";
-				}
-				os << std::endl;
-				return true;
-			}
-			else if(args.second[0] == "1") {
-				os << "Exp 1 in arg 2!" << std::endl;
-				function.erase(function.begin()+i, function.begin()+i+2);
-				return true;
-			}
-		}
-	}
-	return false;
-}
 
 std::vector<bool(*)(std::vector<Token>&, std::ostream&)> simplifyFunctions = {
 	timesOne,
+	expOne,
+	addZero,
 	evalAddSub,
-	trimTrailingZeros,
-	expOne
+	trimTrailingZeros
 };
 
 //Call this to actually do the thing
