@@ -191,7 +191,7 @@ public:
 		else {
 			std::string op = prefix[0];
 			addBrackets = addBrackets || (operatorPrecedence.find(op)->second <= parentPrecedence);
-			std::cout << "OP: " << op << "\tBrackets: " << addBrackets << std::endl;
+			// std::cout << "OP: " << op << "\tBrackets: " << addBrackets << std::endl;
 			if(operatorArguments.find(op)->second == 1) {
 				if(addBrackets) { infix.push_back("("); }
 				infix.push_back(prefix[0]);

@@ -1,6 +1,9 @@
 #ifndef SIMPLIFY_H
 #define SIMPLIFY_H
 
+#include <string>
+#include <sstream>
+
 #include "derivative.h" //For getArguments
 
 //Helpers
@@ -10,36 +13,36 @@ bool isNumeral(std::string str) {
 }
 
 //Simplify rules:
-bool timesOne(std::vector<Token> & function) {
+bool timesOne(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "*") {
 			std::vector<Token> section(function.begin()+i, function.end());
 			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
-			std::cout << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
 			if(args.first[0] == "1") {
 				function.erase(function.begin()+i, function.begin()+i+2);
 				return true;
 			}
 			else if(args.second[0] == "1") {
-				std::cout << "Times 1 in arg 2!" << std::endl;
+				os << "Times 1 in arg 2!" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
-					std::cout << function[i] << " ";
+					os << function[i] << " ";
 				}
-				std::cout << std::endl;
+				os << std::endl;
 				function.erase(function.begin()+i+1+int(args.first.size()));
 				function.erase(function.begin()+i);
-				std::cout << "Now it's" << std::endl;
+				os << "Now it's" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
-					std::cout << function[i] << " ";
+					os << function[i] << " ";
 				}
-				std::cout << std::endl;
+				os << std::endl;
 				return true;
 			}
 		}
 	}
 	return false;
 }
-bool evalAddSub(std::vector<Token> & function) {
+bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "+" || function[i] == "-") {
 			if((isdigit(function[i+1][0]) || (int(function[i+1].size()) > 1 && isdigit(function[i+1][1])))
@@ -57,7 +60,7 @@ bool evalAddSub(std::vector<Token> & function) {
 	}
 	return false;
 }
-bool trimTrailingZeros(std::vector<Token> & function) {
+bool trimTrailingZeros(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(isNumeral(function[i])) {
 			if(function[i].find('.') != std::string::npos) {
@@ -75,29 +78,29 @@ bool trimTrailingZeros(std::vector<Token> & function) {
 	}
 	return false;
 }
-bool expOne(std::vector<Token> & function) {
+bool expOne(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "^") {
 			std::vector<Token> section(function.begin()+i, function.end());
 			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
-			std::cout << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
 			if(args.first[0] == "1") {
-				std::cout << "Exp 1 in arg 1!" << std::endl;
+				os << "Exp 1 in arg 1!" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
-					std::cout << function[i] << " ";
+					os << function[i] << " ";
 				}
-				std::cout << std::endl;
+				os << std::endl;
 				function.erase(function.begin()+i+1+int(args.first.size()));
 				function.erase(function.begin()+i);
-				std::cout << "Now it's" << std::endl;
+				os << "Now it's" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
-					std::cout << function[i] << " ";
+					os << function[i] << " ";
 				}
-				std::cout << std::endl;
+				os << std::endl;
 				return true;
 			}
 			else if(args.second[0] == "1") {
-				std::cout << "Exp 1 in arg 2!" << std::endl;
+				os << "Exp 1 in arg 2!" << std::endl;
 				function.erase(function.begin()+i, function.begin()+i+2);
 				return true;
 			}
@@ -106,7 +109,7 @@ bool expOne(std::vector<Token> & function) {
 	return false;
 }
 
-std::vector<bool(*)(std::vector<Token>&)> simplifyFunctions = {
+std::vector<bool(*)(std::vector<Token>&, std::ostream&)> simplifyFunctions = {
 	timesOne,
 	evalAddSub,
 	trimTrailingZeros,
@@ -114,17 +117,30 @@ std::vector<bool(*)(std::vector<Token>&)> simplifyFunctions = {
 };
 
 //Call this to actually do the thing
-void simplify(std::vector<Token> & function) {
+void simplify(std::vector<Token> & function, bool detail) {
+	std::stringstream dummy;
+	if(detail) {
+		std::cout << "Simplifying..." << std::endl;
+	}
 	bool madeAChange = true;
 	while(madeAChange) {
 		madeAChange = false;
 		for(int i=0; i<int(simplifyFunctions.size()); ++i) {
-			if(simplifyFunctions[i](function)) {
-				madeAChange = true;
-				break;
+			if(detail) {
+				if(simplifyFunctions[i](function, std::cout)) {
+					madeAChange = true;
+					break;
+				}
+			}
+			else {
+				if(simplifyFunctions[i](function, dummy)) {
+					madeAChange = true;
+					break;
+				}
 			}
 		}
 	}
+	std::cout << std::endl;
 }
 
 #endif
