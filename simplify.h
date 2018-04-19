@@ -75,11 +75,42 @@ bool trimTrailingZeros(std::vector<Token> & function) {
 	}
 	return false;
 }
+bool expOne(std::vector<Token> & function) {
+	for(int i=0; i<int(function.size()); ++i) {
+		if(function[i] == "^") {
+			std::vector<Token> section(function.begin()+i, function.end());
+			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
+			std::cout << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			if(args.first[0] == "1") {
+				std::cout << "Exp 1 in arg 1!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					std::cout << function[i] << " ";
+				}
+				std::cout << std::endl;
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
+				std::cout << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					std::cout << function[i] << " ";
+				}
+				std::cout << std::endl;
+				return true;
+			}
+			else if(args.second[0] == "1") {
+				std::cout << "Exp 1 in arg 2!" << std::endl;
+				function.erase(function.begin()+i, function.begin()+i+2);
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 std::vector<bool(*)(std::vector<Token>&)> simplifyFunctions = {
 	timesOne,
 	evalAddSub,
-	trimTrailingZeros
+	trimTrailingZeros,
+	expOne
 };
 
 //Call this to actually do the thing
