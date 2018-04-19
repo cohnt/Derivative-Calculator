@@ -178,35 +178,38 @@ public:
 
 		return prefix;
 	}
-	std::vector<Token> PrefixToInfix(std::vector<Token> prefix) {
+	std::vector<Token> PrefixToInfix(std::vector<Token> prefix, int parentPrecedence, bool parentAssociatesLeft) {
 		std::vector<Token> infix;
 		std::string dummyString;
+		bool addBrackets = !parentAssociatesLeft;
 		if(checkIfOperand(prefix[0])) {
+			if(addBrackets) { infix.push_back("("); }
 			infix.push_back(prefix[0]);
+			if(addBrackets) { infix.push_back(")"); }
 			return infix;
 		}
 		else {
 			std::string op = prefix[0];
+			addBrackets = addBrackets || (operatorPrecedence.find(op)->second <= parentPrecedence);
+			std::cout << "OP: " << op << "\tBrackets: " << addBrackets << std::endl;
 			if(operatorArguments.find(op)->second == 1) {
+				if(addBrackets) { infix.push_back("("); }
 				infix.push_back(prefix[0]);
-				infix.push_back("(");
 				std::vector<Token> prefix_(prefix.begin()+1, prefix.end());
-				std::vector<Token> infix_ = PrefixToInfix(prefix_);
+				std::vector<Token> infix_ = PrefixToInfix(prefix_, operatorPrecedence.find(op)->second, false);
 				infix.insert(infix.end(), infix_.begin(), infix_.end());
-				infix.push_back(")");
+				if(addBrackets) { infix.push_back(")"); }
 				return infix;
 			}
 			else if(operatorArguments.find(op)->second == 2) {
 				std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(prefix);
-				std::vector<Token> infix1 = PrefixToInfix(args.first);
-				std::vector<Token> infix2 = PrefixToInfix(args.second);
-				infix.push_back("(");
+				std::vector<Token> infix1 = PrefixToInfix(args.first, operatorPrecedence.find(op)->second, true);
+				std::vector<Token> infix2 = PrefixToInfix(args.second, operatorPrecedence.find(op)->second, true);
+				if(addBrackets) { infix.push_back("("); }
 				infix.insert(infix.end(), infix1.begin(), infix1.end());
-				infix.push_back(")");
 				infix.push_back(prefix[0]);
-				infix.push_back("(");
 				infix.insert(infix.end(), infix2.begin(), infix2.end());
-				infix.push_back(")");
+				if(addBrackets) { infix.push_back(")"); }
 				return infix;
 			}
 		}

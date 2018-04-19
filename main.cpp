@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 		std::cout << std::endl;
 	}
 
-	std::vector<Token> infix2 = converter.PrefixToInfix(derivative);
+	std::vector<Token> infix2 = converter.PrefixToInfix(derivative, 0, true);
 	if(debug) {
 		std::cout << "Infix:" << std::endl;
 		for(int i=0; i<int(infix2.size()); ++i) {
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 	}
 
 	simplify(derivative);
-	std::vector<Token> infix3 = converter.PrefixToInfix(derivative);
+	std::vector<Token> infix3 = converter.PrefixToInfix(derivative, 0, true);
 	if(debug) {
 		std::cout << "Simplified infix:" << std::endl;
 		for(int i=0; i<int(infix3.size()); ++i) {
