@@ -6,9 +6,16 @@
 #include "derivative.h"
 #include "simplify.h"
 
-bool debug = false;
-
 int main(int argc, char** argv) {
+	bool debug = false;
+
+	if(argc == 2) {
+		std::string str = argv[1];
+		if(str == "--debug") {
+			debug = true;
+		}
+	}
+
 	PolishNotationConverter converter;
 	std::string input;
 	std::cout << "Equation to differentiate: ";
