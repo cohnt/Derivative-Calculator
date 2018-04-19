@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "derivative.h" //For getArguments
+//#include "polish_notation_converter.h" // REMOVE THIS WHEN NOT DEBUGGING
 
 //Helpers
 bool isNumeral(std::string str) {
@@ -49,7 +50,7 @@ bool expOne(std::vector<Token> & function, std::ostream & os) {
 			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
 			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
 			if(args.first[0] == "1") {
-				os << "Exp 1 in arg 1!" << std::endl;
+				std::cout << "Exp 1 in arg 1!" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
 					os << function[i] << " ";
 				}
@@ -65,7 +66,8 @@ bool expOne(std::vector<Token> & function, std::ostream & os) {
 			}
 			else if(args.second[0] == "1") {
 				os << "Exp 1 in arg 2!" << std::endl;
-				function.erase(function.begin()+i, function.begin()+i+2);
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
 				return true;
 			}
 		}
@@ -84,8 +86,7 @@ bool addZero(std::vector<Token> & function, std::ostream & os) {
 					os << function[i] << " ";
 				}
 				os << std::endl;
-				function.erase(function.begin()+i+1+int(args.first.size()));
-				function.erase(function.begin()+i);
+				function.erase(function.begin()+i, function.begin()+i+2);
 				os << "Now it's" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
 					os << function[i] << " ";
@@ -95,7 +96,17 @@ bool addZero(std::vector<Token> & function, std::ostream & os) {
 			}
 			else if(args.second[0] == "0") {
 				os << "Add 0 in arg 2!" << std::endl;
-				function.erase(function.begin()+i, function.begin()+i+2);
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				return true;
 			}
 		}
@@ -169,6 +180,17 @@ void simplify(std::vector<Token> & function, bool detail) {
 					break;
 				}
 			}
+			// EMERGENCY DEBUGGING CODE
+			// PolishNotationConverter pol;
+			// for(int i=0; i<int(function.size()); ++i) {
+			// 	std::cout << function[i] << " ";
+			// }
+			// std::cout << std::endl;
+			// std::vector<Token> inf = pol.PrefixToInfix(function, 0, true);
+			// for(int i=0; i<int(inf.size()); ++i) {
+			// 	std::cout << inf[i] << " ";
+			// }
+			// std::cout << std::endl << std::endl;
 		}
 	}
 	std::cout << std::endl;
