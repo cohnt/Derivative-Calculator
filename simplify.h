@@ -43,6 +43,9 @@ bool timesOne(std::vector<Token> & function, std::ostream & os) {
 	}
 	return false;
 }
+bool divOne(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
 bool expOne(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "^") {
@@ -113,6 +116,18 @@ bool addZero(std::vector<Token> & function, std::ostream & os) {
 	}
 	return false;
 }
+bool subZero(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
+bool timesZero(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
+bool divZero(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
+bool expZero(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
 bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "+" || function[i] == "-") {
@@ -129,6 +144,9 @@ bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 			}
 		}
 	}
+	return false;
+}
+bool evalMultDiv(std::vector<Token> & function, std::ostream & os) {
 	return false;
 }
 bool trimTrailingZeros(std::vector<Token> & function, std::ostream & os) {
@@ -152,9 +170,15 @@ bool trimTrailingZeros(std::vector<Token> & function, std::ostream & os) {
 
 std::vector<bool(*)(std::vector<Token>&, std::ostream&)> simplifyFunctions = {
 	timesOne,
+	divOne,
 	expOne,
 	addZero,
+	subZero,
+	timesZero,
+	divZero,
+	expZero,
 	evalAddSub,
+	evalMultDiv,
 	trimTrailingZeros
 };
 
