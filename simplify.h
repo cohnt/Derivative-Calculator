@@ -213,6 +213,18 @@ bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 bool evalMultDiv(std::vector<Token> & function, std::ostream & os) {
 	return false;
 }
+bool evalExp(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
+bool evalSqrt(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
+bool lnEIdentity(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
+bool trigPiIdentities(std::vector<Token> & function, std::ostream & os) {
+	return false;
+}
 bool trimTrailingZeros(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(isNumeral(function[i])) {
@@ -253,6 +265,10 @@ std::vector<bool(*)(std::vector<Token>&, std::ostream&)> simplifyFunctions = {
 	expZero,
 	evalAddSub,
 	evalMultDiv,
+	evalExp,
+	evalSqrt,
+	lnEIdentity,
+	trigPiIdentities,
 	trimTrailingZeros
 };
 
