@@ -21,7 +21,17 @@ bool timesOne(std::vector<Token> & function, std::ostream & os) {
 			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
 			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
 			if(args.first[0] == "1") {
+				os << "Times 1 in arg 1!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				function.erase(function.begin()+i, function.begin()+i+2);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				return true;
 			}
 			else if(args.second[0] == "1") {
@@ -69,8 +79,17 @@ bool expOne(std::vector<Token> & function, std::ostream & os) {
 			}
 			else if(args.second[0] == "1") {
 				os << "Exp 1 in arg 2!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				function.erase(function.begin()+i+1+int(args.first.size()));
 				function.erase(function.begin()+i);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				return true;
 			}
 		}
@@ -142,7 +161,16 @@ bool timesZero(std::vector<Token> & function, std::ostream & os) {
 			}
 			else if(args.second[0] == "0") {
 				os << "Times 0 in arg 2!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				function.erase(function.begin()+i, function.begin()+i+int(args.first.size()));
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				return true;
 			}
 		}
@@ -158,8 +186,12 @@ bool expZero(std::vector<Token> & function, std::ostream & os) {
 bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 	for(int i=0; i<int(function.size()); ++i) {
 		if(function[i] == "+" || function[i] == "-") {
-			if((isdigit(function[i+1][0]) || (int(function[i+1].size()) > 1 && isdigit(function[i+1][1])))
-			 && (isdigit(function[i+2][0]) || (int(function[i+2].size()) > 1 && isdigit(function[i+2][1])))) {
+			if(isNumeral(function[i+1]) && isNumeral(function[i+2])) {
+				os << "Add/sub arithmetic!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				if(function[i] == "+") {
 					function[i] = std::to_string(stod(function[i+1])+stod(function[i+2]));
 				}
@@ -167,6 +199,11 @@ bool evalAddSub(std::vector<Token> & function, std::ostream & os) {
 					function[i] = std::to_string(stod(function[i+1])-stod(function[i+2]));
 				}
 				function.erase(function.begin()+i+1, function.begin()+i+3);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
 				return true;
 			}
 		}
@@ -181,12 +218,22 @@ bool trimTrailingZeros(std::vector<Token> & function, std::ostream & os) {
 		if(isNumeral(function[i])) {
 			if(function[i].find('.') != std::string::npos) {
 				if(function[i].back() == '0') {
+					os << "Trimming trailing zeros..." << std::endl;
+					for(int i=0; i<int(function.size()); ++i) {
+						os << function[i] << " ";
+					}
+					os << std::endl;
 					while(function[i].back() == '0') {
 						function[i].pop_back();
 					}
 					if(function[i].back() == '.') {
 						function[i].pop_back(); //If it ends with an unnecessary decimal point, clear that out too
 					}
+					os << "Now it's" << std::endl;
+					for(int i=0; i<int(function.size()); ++i) {
+						os << function[i] << " ";
+					}
+					os << std::endl;
 					return true;
 				}
 			}
