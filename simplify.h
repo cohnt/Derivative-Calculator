@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include "derivative.h" //For getArguments
 //#include "polish_notation_converter.h" // REMOVE THIS WHEN NOT DEBUGGING
@@ -158,6 +159,43 @@ bool addZero(std::vector<Token> & function, std::ostream & os) {
 	return false;
 }
 bool subZero(std::vector<Token> & function, std::ostream & os) {
+	for(int i=0; i<int(function.size()); ++i) {
+		if(function[i] == "-") {
+			std::vector<Token> section(function.begin()+i, function.end());
+			std::pair<std::vector<Token>, std::vector<Token>> args = getArguments(section);
+			os << "args.first[0]=" << args.first[0] << "\targs.second[0]=" << args.second[0] << std::endl;
+			if(args.first[0] == "0") {
+				os << "Sub 0 in arg 1!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				std::replace(function.begin()+i, function.begin()+i+1, std::string("-"), std::string("*"));
+				std::replace(function.begin()+i+1, function.begin()+i+2, std::string("0"), std::string("-1"));
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				return true;
+			}
+			else if(args.second[0] == "0") {
+				os << "Sub 0 in arg 2!" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				function.erase(function.begin()+i+1+int(args.first.size()));
+				function.erase(function.begin()+i);
+				os << "Now it's" << std::endl;
+				for(int i=0; i<int(function.size()); ++i) {
+					os << function[i] << " ";
+				}
+				os << std::endl;
+				return true;
+			}
+		}
+	}
 	return false;
 }
 bool timesZero(std::vector<Token> & function, std::ostream & os) {
