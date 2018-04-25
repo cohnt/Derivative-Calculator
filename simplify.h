@@ -187,7 +187,7 @@ bool timesZero(std::vector<Token> & function, std::ostream & os) {
 					os << function[i] << " ";
 				}
 				os << std::endl;
-				function.erase(function.begin()+i, function.begin()+i+int(args.first.size()));
+				function.erase(function.begin()+i, function.begin()+i+1+int(args.first.size()));
 				os << "Now it's" << std::endl;
 				for(int i=0; i<int(function.size()); ++i) {
 					os << function[i] << " ";
