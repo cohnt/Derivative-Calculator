@@ -67,7 +67,7 @@ public:
 			}
 			assert(found); //Better find it!
 
-			lastCharNumber = isNumber;
+			lastCharNumber = isNumber || isConstant || isVar;
 
 			//Now, we have the following booleans to help us determine what to do:
 			//isNegative, isNumber, isConstant, isBracket, isVar, isOperator
